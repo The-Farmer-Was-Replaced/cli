@@ -34,7 +34,7 @@ class Game:
             print(line, end='\n\n')
 
     def clear(self):
-        self.create_grid()
+        self.grid = self.create_grid()
         self.player_pos = [0, 0]
 
     def move(self, direction):
@@ -54,14 +54,14 @@ class Game:
     def swap(self, direction):
         tx, ty = self.player_pos[0], self.player_pos[1]
         self.ticks += 200
-        match direction.lower():
-            case 'north':
+        match direction:
+            case 'North':
                 ty += 1
-            case 'south':
+            case 'South':
                 ty -= 1
-            case 'west':
+            case 'West':
                 tx -= 1
-            case 'east':
+            case 'East':
                 tx += 1
             case _:
                 raise ValueError("Invalid swap direction.", direction)
@@ -78,13 +78,13 @@ class Game:
         x, y = self.player_pos
         if direction:
             match direction:
-                case 'north':
+                case 'North':
                     y = (y + 1) % self.world_size
-                case 'south':
+                case 'South':
                     y = (y - 1) % self.world_size
-                case 'west':
+                case 'West':
                     x = (x - 1) % self.world_size
-                case 'east':
+                case 'East':
                     x = (x + 1) % self.world_size
                 case _:
                     raise ValueError("Invalid measure direction.", direction)
@@ -109,6 +109,19 @@ class Game:
 
     def replant(self):
         self.ticks += 200 * 3
+        match self.grid[self.player_pos[0]][self.player_pos[1]][0]:
+            case '🌵':
+                self.grid[self.player_pos[0]][self.player_pos[1]] = "🌵" + str(random.randint(0, 9))
+            case '🌻':
+                self.grid[self.player_pos[0]][self.player_pos[1]] = "🌻" + str(random.randint(7, 15))
+            case '🌳':
+                self.grid[self.player_pos[0]][self.player_pos[1]] = "🌳 "
+            case '🌿':
+                self.grid[self.player_pos[0]][self.player_pos[1]] = "🌿 "
+            case '🌱':
+                self.grid[self.player_pos[0]][self.player_pos[1]] = "🌱 "
+            case _:
+                raise ValueError("Invalid entity.", self.grid[self.player_pos[0]][self.player_pos[1]])
 
     def play(self):
         while True:
@@ -143,6 +156,12 @@ class Game:
                 case 'plant':
                     entity = cmd.split()[1] if len(cmd.split()) > 1 else None
                     self.plant(entity)
+
+                case 'replant':
+                    self.replant()
+
+                case 'clear':
+                    self.clear()
 
                 case _:
                     print("Invalid command.")

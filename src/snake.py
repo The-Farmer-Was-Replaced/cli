@@ -93,13 +93,13 @@ class Snake(game.Game):
         x, y = self.player_pos
         if direction:
             match direction:
-                case 'north':
+                case 'North':
                     y = (y + 1) % self.world_size
-                case 'south':
+                case 'South':
                     y = (y - 1) % self.world_size
-                case 'west':
+                case 'West':
                     x = (x - 1) % self.world_size
-                case 'east':
+                case 'East':
                     x = (x + 1) % self.world_size
                 case _:
                     raise ValueError("Invalid measure direction.", direction)
